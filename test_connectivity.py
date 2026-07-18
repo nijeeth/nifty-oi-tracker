@@ -86,11 +86,42 @@ def test_nsepython():
         return False
 
 
+def test_sensibull():
+    print("\n" + "=" * 50)
+    print("TEST 4: Sensibull (via bharat-sm-data library)")
+    print("=" * 50)
+    try:
+        from Derivatives.Sensibull import Sensibull
+        from datetime import datetime
+
+        sb = Sensibull()
+        token_info = sb.search_token("NIFTY")
+        print(f"Token info: {token_info}")
+
+        if not token_info:
+            print("FAILED - Could not find NIFTY token")
+            return False
+
+        expiry = datetime.strptime("2026-07-21", "%Y-%m-%d")
+        result = sb.get_options_data_with_greeks(
+            ticker_data=token_info,
+            num_look_ups_from_atm=2,
+            expiry_date=expiry,
+        )
+        print(f"Result: {result}")
+        print("SUCCESS")
+        return True
+    except Exception as e:
+        print(f"FAILED - {type(e).__name__}: {e}")
+        return False
+
+
 if __name__ == "__main__":
     results = {
         "yfinance": test_yfinance(),
         "nse_direct": test_nse_direct(),
         "nsepython": test_nsepython(),
+        "sensibull": test_sensibull(),
     }
 
     print("\n" + "=" * 50)
